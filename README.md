@@ -1,88 +1,89 @@
 # 侠客行 · XiaKeXing
 
-> 中文武侠题材在线角色扮演游戏的公开展示快照。
+[![公开展示仓库](https://img.shields.io/badge/repository-public-2f855a)](https://github.com/FengYunCalm/xiakexing-public)
 
-**English summary:** XiaKeXing is a Chinese wuxia online RPG project. This repository is a curated public showcase of its visual direction and product surface. The private implementation, service runtime, and ongoing rewrite are intentionally not published here.
+侠客行是一款中文文字武侠网络游戏项目，结合 LPC 游戏服务端、Go Gateway 和 Android 客户端。这个仓库用于求职和技术评审，展示 `main` 分支的代表性代码与客户端界面。
 
-## 这个仓库是什么
+> **公开范围**：本仓库只来自私有仓库的 `main` 分支快照，不包含 `rewrite` 分支、`cloud` 分支、私有仓库历史或私有标签。
 
-这个仓库从私有开发仓库的 `main` 版本整理而来，目标是让求职、作品展示和技术交流可以直接看到项目的产品形态，而不是公开完整的运行系统。
+## 项目结构
 
-公开内容聚焦于：
+```text
+client/       Android 客户端生产代码与界面资源
+gateway-go/    Go Gateway 生产代码
+server/       LPC 服务端运行时、游戏服务和玩家命令代码
+showcase/     客户端界面展示图
+```
 
-- 武侠题材的中文界面与视觉方向；
-- Android 客户端的屏幕结构和交互结果；
-- 房间导航、战斗、背包、技能和地图等主要产品场景；
-- 一个可以独立阅读的项目说明和静态画面证据。
+为控制公开边界，以下内容没有发布：
 
-## 画面展示
+- 服务端配置、管理员配置、内容数据、运行数据和持久化数据；
+- 管理员命令、迁移/维护脚本、日志实现和 Driver 适配代码；
+- 部署脚本、运维文件、AI 工具、内部规范、设计决策、测试报告和工作计划；
+- 测试夹具、测试源文件、完整发布配置、凭据和生产环境参数；
+- 私有仓库中的其他分支、标签和历史提交。
 
-以下画面来自本地 UI 基线截图。它们用于展示设计和交互方向，不代表当前线上服务，也不提供可登录的公共账号。
+因此这是**代码审阅快照**，不是可直接启动线上服务的完整发行包。缺少的配置、Driver、内容和运行数据是有意保留在私有仓库中的边界，不代表项目缺少这些部分。
 
-<table>
-  <tr>
-    <td><img src="showcase/screenshots/main.png" alt="游戏主界面" width="260" /></td>
-    <td><img src="showcase/screenshots/combat.png" alt="战斗界面" width="260" /></td>
-  </tr>
-  <tr>
-    <td align="center">主界面与房间导航</td>
-    <td align="center">战斗状态与叙事区域</td>
-  </tr>
-  <tr>
-    <td><img src="showcase/screenshots/inventory.png" alt="背包界面" width="260" /></td>
-    <td><img src="showcase/screenshots/skills.png" alt="技能界面" width="260" /></td>
-  </tr>
-  <tr>
-    <td align="center">背包与物品分类</td>
-    <td align="center">技能面板与角色成长</td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><img src="showcase/screenshots/map.png" alt="地图界面" width="360" /></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">地图浏览与空间导航</td>
-  </tr>
-</table>
+## 值得查看的部分
 
-## 产品方向
+### Android 客户端
 
-侠客行希望把传统文字冒险中的信息密度，与移动端更容易理解的结构化界面结合起来。当前展示重点包括：
+客户端使用 Kotlin、Jetpack Compose 和模块化结构实现。可以重点查看：
 
-1. **以场景为中心**：当前位置、可移动出口、场景对象和叙事文本保持在同一工作区内。
-2. **可读的战斗反馈**：角色和对手的状态使用稳定的视觉层级呈现，减少长文本中的信息丢失。
-3. **统一的面板语言**：背包、技能、任务、地图和交互面板使用同一套深色水墨视觉基线。
-4. **中文内容优先**：界面、物品、技能和场景文本围绕中文武侠语境设计。
-5. **移动端操作优先**：主要动作保持清晰的触控区域和可预期的面板层级。
+- `client/feature/shell/src/main/`：主游戏界面、面板、交互编排和状态渲染；
+- `client/core/`：客户端网络、协议和本地存储模块；
+- `client/app/src/main/`：应用入口、主题和窗口控制；
+- `showcase/`：当前客户端界面截图。
 
-## 技术方向
+### Go Gateway
 
-私有开发版本的客户端方向包括 Android、Kotlin 和 Jetpack Compose。公开仓库只保留可展示的产品结果，不公开完整客户端源码或服务端实现，因此本仓库**不是一个可以直接构建和运行游戏的源码发行版**。
+`gateway-go/` 展示 Gateway 的连接管理、帧处理、会话、顺序交付和服务入口代码。部署配置和运行实例没有随代码公开。
 
-这里展示的是最终可观察的界面与产品边界；账号系统、网络连接、协议、持久化、服务端运行时和内容生产链路均不在公开范围内。
+### LPC 服务端
 
-## 公开边界
+`server/` 展示 Driver 之上的游戏运行时、服务对象、玩家命令和游戏服务实现。服务端配置、内容表、管理员入口和持久化数据不在公开快照中。
 
-为了保护仍在持续开发的私有重写版本，本仓库明确不包含以下内容：
+## 本地查看
 
-- 服务端、Driver、Gateway 和运行时实现；
-- 登录凭据、账号数据、运行数据、生产配置和部署脚本；
-- 网络协议、认证、持久化和业务提交的内部实现；
-- 产品合同、架构规则、迁移计划、内部决策和测试报告；
-- 私有开发分支、标签、提交历史和未发布构件；
-- 公共服务地址、测试账号和可直接使用的登录入口。
+只查看客户端代码和截图即可，不需要任何线上账号或服务地址。
 
-这些内容继续保留在私有开发仓库中。这个公开仓库不是私有仓库的镜像，也不会自动同步私有分支。
+如需尝试构建 Android 客户端：
 
-## 如何查看
+```bash
+cd client
+./gradlew assembleDebug
+```
 
-直接打开本页即可查看项目说明和画面。截图位于 [`showcase/screenshots/`](showcase/screenshots/)。
+公开快照没有提供可连接的线上服务，也不接受通过本仓库提交生产配置或凭据。
 
-本仓库没有公共服务端、公共测试账号或可下载的游戏构件；不要根据截图尝试连接未公开的运行实例。
+## 界面展示
 
-## 项目状态
+| 主界面 | 交互面板 |
+| --- | --- |
+| ![主界面](showcase/shell-main.png) | ![交互面板](showcase/interaction-sheet.png) |
 
-项目仍在私有环境中持续开发。公开仓库只在经过人工审查后发布新的展示快照，公开内容与私有实现之间不保证逐提交对应。
+| 战斗界面 | 任务与世界 |
+| --- | --- |
+| ![战斗界面](showcase/combat.png) | ![任务与世界](showcase/quest-world.png) |
 
-## 许可
+| 状态与背包 |
+| --- |
+| ![状态与背包](showcase/status-inventory.png) |
 
-本仓库沿用 [`LICENSE`](LICENSE) 中的 PolyForm Noncommercial License 1.0.0。第三方资源如有单独许可，以其原始许可文本为准。
+## 技术栈
+
+- **客户端**：Kotlin、Jetpack Compose、Android Gradle Plugin
+- **Gateway**：Go
+- **游戏服务端**：LPC / FluffOS Driver
+- **协议**：客户端、Gateway 与游戏服务端之间的分层消息协议
+
+## 说明
+
+- 当前公开仓库是人工筛选的展示快照，不与私有仓库自动同步。
+- 公开代码来自 `main`；后续重写工作保留在私有仓库中。
+- 运行数据、账号信息、密钥和生产环境配置不属于本仓库。
+
+## License
+
+见 [`LICENSE`](LICENSE)。

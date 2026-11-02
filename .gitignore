@@ -1,5 +1,19 @@
-# Local and editor files
-.DS_Store
+# IDE and OS files
 .idea/
-.vscode/
-Thumbs.db
+*.iml
+.DS_Store
+
+# Android / Gradle outputs
+.gradle/
+**/.gradle/
+**/build/
+local.properties
+*.keystore
+*.jks
+
+# Go outputs
+bin/
+coverage.out
+
+# Local public-repo staging output
+out/

@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+*/build/
+NUL
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+*.log
+
+# Build outputs
+*.apk
+*.aab
+
+# Local config
+local.properties
+*.keystore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Kotlin
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+*.kt.swp
+*.kts.swp

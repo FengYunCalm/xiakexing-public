@@ -1,0 +1,81 @@
+#!/usr/bin/env sh
+set -eu
+
+APP_HOME=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+CLASSPATH="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+
+resolve_java_cmd() {
+  if [ -n "${JAVA_HOME:-}" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+    printf '%s\n' "$JAVA_HOME/bin/java"
+    return 0
+  fi
+
+  command -v java
+}
+
+java_major_version() {
+  version_output=$($1 -version 2>&1)
+  version_line=$(printf '%s\n' "$version_output" | awk -F '"' '/version/ {print $2; exit}')
+
+  case "$version_line" in
+    1.*)
+      printf '%s\n' "$version_line" | cut -d. -f2
+      ;;
+    *)
+      printf '%s\n' "$version_line" | cut -d. -f1
+      ;;
+  esac
+}
+
+resolve_compatible_java_home() {
+  for env_var in JAVA21_HOME JDK21_HOME JAVA17_HOME JDK17_HOME; do
+    candidate=$(eval "printf '%s' \"\${$env_var:-}\"")
+    if [ -n "$candidate" ] && [ -x "$candidate/bin/java" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  for candidate in \
+    "$APP_HOME/.jdks/temurin-21" \
+    "$APP_HOME/.jdks/jdk-21" \
+    "$HOME/.local/opt/temurin-21" \
+    "$HOME/.local/opt/jdk-21" \
+    /usr/lib/jvm/temurin-21* \
+    /usr/lib/jvm/java-21* \
+    /usr/lib/jvm/openjdk-21* \
+    /usr/lib/jvm/temurin-17* \
+    /usr/lib/jvm/java-17* \
+    /usr/lib/jvm/openjdk-17*; do
+    if [ -x "$candidate/bin/java" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+if [ ! -f "$CLASSPATH" ]; then
+  echo "gradle wrapper jar not found: $CLASSPATH" >&2
+  exit 1
+fi
+
+JAVA_CMD=$(resolve_java_cmd)
+JAVA_MAJOR=$(java_major_version "$JAVA_CMD")
+
+# Gradle 8.11.1 + Kotlin DSL in this project currently crashes on JDK 26+ during script evaluation.
+if [ "$JAVA_MAJOR" -ge 26 ]; then
+  if COMPATIBLE_JAVA_HOME=$(resolve_compatible_java_home); then
+    JAVA_HOME=$COMPATIBLE_JAVA_HOME
+    PATH="$JAVA_HOME/bin:$PATH"
+    export JAVA_HOME PATH
+    JAVA_CMD="$JAVA_HOME/bin/java"
+  else
+    echo "Default Java $JAVA_MAJOR is too new for this Gradle/Kotlin DSL setup." >&2
+    echo "Set JAVA21_HOME, JDK21_HOME, JAVA17_HOME, or JDK17_HOME to a compatible JDK." >&2
+    exit 1
+  fi
+fi
+
+exec "$JAVA_CMD" -Dorg.gradle.appname=gradlew -classpath "$CLASSPATH" org.gradle.wrapper.GradleWrapperMain "$@"

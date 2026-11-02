@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 后台保活——前台服务持有连接生命周期 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:name=".XiaKeXingApplication"
+        android:allowBackup="false"
+        android:icon="@drawable/launcher_icon_xkx"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@drawable/launcher_icon_xkx"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ClientNew"
+        android:usesCleartextTraffic="false"
+        tools:replace="android:usesCleartextTraffic">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+    <!-- 聊天浮层键盘避让：API≥30 edge-to-edge 下本配置为 no-op、ime insets 直发；
+         API<30 靠它派发 insets（窗口帧会收缩，未消费 ime 的界面在旧机型会被压缩）。 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 保活前台服务（START_STICKY；连接所有权迁移见方案 §5） -->
+        <service
+            android:name=".connect.GameConnectionService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/apk_file_paths" />
+        </provider>
+    </application>
+
+</manifest>

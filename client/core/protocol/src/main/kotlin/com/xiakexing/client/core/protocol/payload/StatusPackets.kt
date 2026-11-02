@@ -1,0 +1,76 @@
+package com.xiakexing.client.core.protocol.payload
+
+import com.google.gson.JsonObject
+
+data class PlayerStatusSnapshot(
+    val name: String,
+    val hp: Long,
+    val maxHp: Long,
+    val effHp: Long,
+    val mp: Long,
+    val maxMp: Long,
+    val effMp: Long,
+    val ep: Long,
+    val maxEp: Long,
+    val neili: Long,
+    val maxNeili: Long,
+    val skillCap: Long,
+    val progressionRank: Long,
+    val exp: Long,
+    val potential: Long? = null,
+    val age: Long = 18,
+    val strength: Long,
+    val dexterity: Long,
+    val constitution: Long,
+    val intelligence: Long,
+    val attack: Long,
+    val defense: Long,
+    val parry: Long,
+    val hit: Long,
+    val dodge: Long,
+    val critical: Long,
+    val criticalResist: Long,
+    val armorBreak: Long,
+    val attackSpeed: Long,
+    val partial: Boolean = false,
+    // 游戏内时辰（子丑寅卯…），随 STAT 高频包附载
+    val shichen: String = "",
+) {
+    companion object {
+        fun fromJson(payload: JsonObject): PlayerStatusSnapshot {
+            return PlayerStatusSnapshot(
+                name = payload.payloadString("name"),
+                hp = payload.payloadLong("hp"),
+                maxHp = payload.payloadLong("max_hp"),
+                effHp = payload.payloadLong("eff_hp"),
+                mp = payload.payloadLong("mp"),
+                maxMp = payload.payloadLong("max_mp"),
+                effMp = payload.payloadLong("eff_mp"),
+                ep = payload.payloadLong("ep"),
+                maxEp = payload.payloadLong("max_ep"),
+                neili = payload.payloadLong("neili"),
+                maxNeili = payload.payloadLong("max_neili"),
+                skillCap = payload.payloadLong("skill_cap"),
+                progressionRank = payload.payloadLong("progression_rank"),
+                exp = payload.payloadLong("exp"),
+                potential = payload.payloadOptionalLong("potential"),
+                age = payload.payloadLong("age", 18),
+                strength = payload.payloadLong("str"),
+                dexterity = payload.payloadLong("dex"),
+                constitution = payload.payloadLong("con"),
+                intelligence = payload.payloadLong("int"),
+                attack = payload.payloadLong("attack"),
+                defense = payload.payloadLong("defense"),
+                parry = payload.payloadLong("parry"),
+                hit = payload.payloadLong("hit"),
+                dodge = payload.payloadLong("dodge"),
+                critical = payload.payloadLong("critical"),
+                criticalResist = payload.payloadLong("critical_resist"),
+                armorBreak = payload.payloadLong("armor_break"),
+                attackSpeed = payload.payloadLong("attack_speed"),
+                partial = payload.payloadBoolean("partial"),
+                shichen = payload.payloadString("shichen"),
+            )
+        }
+    }
+}
